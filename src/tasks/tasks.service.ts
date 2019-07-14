@@ -36,23 +36,12 @@ export class TasksService {
     //     return tasks;
     // }
 
-    // createTask(taskDto: CreateTaskDto): Task {
-    //     const { title, description } = taskDto;
-    //     const task: Task = {
-    //         id: uuid(),
-    //         title,
-    //         description,
-    //         status: TaskStatus.OPEN,
-    //     };
-
-    //     this.tasks.push(task);
-    //     return task;
-    // }
-
-    // deleteTask(id: string): void {
-    //     this.findTask(id);
-    //     this.tasks = this.tasks.filter(task => task.id !== id);
-    // }
+    async deleteTask(id: number): Promise<void> {
+        const result = await this.taskRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`No task found with the Id => ${id}`);
+        }
+    }
 
     // updateTaskStatus(id: string, status: TaskStatus): Task {
     //     const task = this.findTask(id);
