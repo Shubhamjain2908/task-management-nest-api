@@ -12,6 +12,15 @@ export class TasksService {
         @InjectRepository(TaskRepository) private taskRepository: TaskRepository,
     ) { }
 
+    async createTask(taskDto: CreateTaskDto): Promise<Task> {
+        const { title, description } = taskDto;
+        const task = new Task();
+        task.title = title;
+        task.description = description;
+        await task.save();
+        return task;
+    }
+
     async getTaskById(id: number): Promise<Task> {
         return this.findTask(id);
     }
