@@ -21,21 +21,9 @@ export class TasksService {
         return this.findTask(id);
     }
 
-    // getAllTasks(): Task[] {
-    //     return [...this.tasks];
-    // }
-
-    // getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
-    //     const { status, search } = filterDto;
-    //     let tasks = this.getAllTasks();
-    //     if (status) {
-    //         tasks = tasks.filter(t => t.status === status);
-    //     }
-    //     if (search) {
-    //         tasks = tasks.filter(t => t.title.includes(search) || t.description.includes(search));
-    //     }
-    //     return tasks;
-    // }
+    async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
+        return this.taskRepository.getTasks(filterDto);
+    }
 
     async deleteTask(id: number): Promise<void> {
         const result = await this.taskRepository.delete(id);
