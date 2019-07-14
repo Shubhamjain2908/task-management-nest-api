@@ -13,12 +13,7 @@ export class TasksService {
     ) { }
 
     async createTask(taskDto: CreateTaskDto): Promise<Task> {
-        const { title, description } = taskDto;
-        const task = new Task();
-        task.title = title;
-        task.description = description;
-        await task.save();
-        return task;
+        return this.taskRepository.createTask(taskDto);
     }
 
     async getTaskById(id: number): Promise<Task> {
