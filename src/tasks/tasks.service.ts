@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-// import { Task, TaskStatus } from './tasks.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskRepository } from './task.repository';
@@ -18,8 +17,8 @@ export class TasksService {
         return this.taskRepository.createTask(taskDto, user);
     }
 
-    async getTaskById(id: number): Promise<Task> {
-        return this.findTask(id);
+    async getTaskById(id: number, user: User): Promise<Task> {
+        return this.findTask(id, user.id);
     }
 
     async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
@@ -33,15 +32,15 @@ export class TasksService {
         }
     }
 
-    async updateTaskStatus(id: number, status: TaskStatus): Promise<Task> {
-        const task = await this.findTask(id);
+    async updateTaskStatus(id: number, status: TaskStatus, user: User): Promise<Task> {
+        const task = await this.findTask(id, user.id);
         task.status = status;
         await task.save();
         return task;
     }
 
-    private async findTask(id: number): Promise<Task> {
-        const found = await this.taskRepository.findOne(id);
+    private async findTask(id: number, userId: number): Promise<Task> {
+        const found = await this.taskRepository.findOne({ where: { id, userId } });
         if (!found) {
             throw new NotFoundException(`No task found with the Id => ${id}`);
         }
