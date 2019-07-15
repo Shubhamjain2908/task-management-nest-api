@@ -1,6 +1,7 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, BeforeUpdate, BeforeInsert } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, BeforeUpdate, BeforeInsert, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { async } from 'rxjs/internal/scheduler/async';
+import { Task } from '../tasks/task.entity';
+import { type } from 'os';
 
 @Entity()
 @Unique(['username'])
@@ -13,6 +14,9 @@ export class User extends BaseEntity {
 
     @Column()
     password: string;
+
+    @OneToMany(() => Task, task => task.user, { eager: true })
+    task: Task[];
 
     @BeforeInsert()
     @BeforeUpdate()
