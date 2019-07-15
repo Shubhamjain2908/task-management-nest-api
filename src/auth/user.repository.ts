@@ -1,7 +1,7 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredientialsDto } from './dto/auth-credentials.dto';
-import { ConflictException, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -20,6 +20,16 @@ export class UserRepository extends Repository<User> {
             } else {
                 throw new InternalServerErrorException();
             }
+        }
+    }
+
+    async validateUserPasssword(authDto: AuthCredientialsDto): Promise<string> {
+        const { username, password } = authDto;
+        const user = await this.findOne({ username });
+        if (user && await user.comparePassword(password)) {
+            return user.username;
+        } else {
+            throw new UnauthorizedException('Invalid credientials.');
         }
     }
 
